@@ -85,6 +85,9 @@ public class MobileShooter : MonoBehaviour {
         //   the ownership of the ball to PC so the ball is correctly destroyed
         //   upon hitting a wall.
 
+        GameObject newPaintBall = PhotonNetwork.Instantiate("ball", Vector3.zero, Quaternion.identity, 0);
+        PhotonView photonView = newPaintBall.GetComponent<PhotonView>();
+        photonView.RPC("RPCInitialize", PhotonTargets.All, velocity, color_v);
     }
 
     public void ShootBallFront()

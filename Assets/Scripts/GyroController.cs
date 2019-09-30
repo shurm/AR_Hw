@@ -66,7 +66,8 @@ public class GyroController : MonoBehaviour
             //controlledObject.transform.rotation = ConvertRotation(gyro.attitude)*rot;
             //[phone's orientation this frame] = [starting orientation of the cube GameObject] * Quaternion.Inverse([starting orientation of the physical phone]) * [current orientation of the physical phone]
             controlledObject.transform.rotation = qRefObject*Quaternion.Inverse(qRefGyro) * ConvertRotation(gyro.attitude);
-    debugText.text = controlledObject.transform.rotation.ToString();
+            if(debugText!=null)
+                debugText.text = controlledObject.transform.rotation.ToString();
         }
     }
 

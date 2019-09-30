@@ -1,8 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MobileNetwork : Photon.PunBehaviour
 {
     private string roomName;
+    private GyroController gyroController;
+    public Text debugText;
 
     private void OnGUI()
     {
@@ -17,6 +20,29 @@ public class MobileNetwork : Photon.PunBehaviour
 		GetComponent<MobileShooter>().Activate();
 		base.OnJoinedRoom ();
     }
+    private void Start()
+    {
+        PhotonNetwork.ConnectUsingSettings("0.1");
+        roomName = "testing";
+        Screen.orientation = ScreenOrientation.Portrait;
+        gyroController = GetComponent<GyroController>();
+    }
 
+
+    public override void OnJoinedLobby()
+    {
+        if(debugText!=null)
+            debugText.text = "Joined lobby";
+        if (PhotonNetwork.countOfRooms > 0)
+        {
+            PhotonNetwork.JoinRoom(roomName);
+        }
+        else
+        {
+            PhotonNetwork.CreateRoom(roomName);
+        }
+
+        base.OnJoinedLobby();
+    }
 
 }
