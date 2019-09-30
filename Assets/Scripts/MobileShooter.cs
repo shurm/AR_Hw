@@ -14,7 +14,9 @@ public class MobileShooter : MonoBehaviour {
     float mousedowned_time;
 
     bool bMouseDown = false;
-    float ballSpeedFixed = 25f;
+    float ballSpeedFixed = 40;
+
+    public Transform ballSpawnPosition;
 
     private void Start()
     {
@@ -85,17 +87,24 @@ public class MobileShooter : MonoBehaviour {
         //   the ownership of the ball to PC so the ball is correctly destroyed
         //   upon hitting a wall.
 
-        GameObject newPaintBall = PhotonNetwork.Instantiate("ball", Vector3.zero, Quaternion.identity, 0);
+        GameObject newPaintBall = PhotonNetwork.Instantiate("ball", ballSpawnPosition.position, Quaternion.identity, 0);
         PhotonView photonView = newPaintBall.GetComponent<PhotonView>();
         photonView.RPC("RPCInitialize", PhotonTargets.All, velocity, color_v);
     }
 
     public void ShootBallFront()
     {
-        ShootBall(ballSpeedFixed * targetBehavior.GetPhoneForward());
+        float angle = 5;
+
+        angle = angle * Mathf.PI / 180;
+        ShootBall(Mathf.Cos(angle) * ballSpeedFixed * targetBehavior.GetPhoneForward() + Mathf.Sin(angle) * ballSpeedFixed * targetBehavior.GetPhoneUp());
     }
 
     public void ShootBallUp() {
-        ShootBall(ballSpeedFixed * targetBehavior.GetPhoneUp());
+        //Debug.Log(targetBehavior.GetPhoneUp());
+        float angle = 60;
+
+        angle = angle * Mathf.PI / 180;
+        ShootBall(Mathf.Cos(angle) * ballSpeedFixed * targetBehavior.GetPhoneForward() + Mathf.Sin(angle) * ballSpeedFixed * targetBehavior.GetPhoneUp());
     }
 }

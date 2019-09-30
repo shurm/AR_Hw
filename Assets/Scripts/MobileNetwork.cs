@@ -9,7 +9,7 @@ public class MobileNetwork : Photon.PunBehaviour
 
     private void OnGUI()
     {
-        GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
+        //GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
     }
 
     // TODO-2.a: 
@@ -17,7 +17,10 @@ public class MobileNetwork : Photon.PunBehaviour
 
 	public override void OnJoinedRoom()
 	{
-		GetComponent<MobileShooter>().Activate();
+        if (debugText != null)
+            debugText.text = "Joined room";
+
+        GetComponent<MobileShooter>().Activate();
 		base.OnJoinedRoom ();
     }
     private void Start()
@@ -28,19 +31,17 @@ public class MobileNetwork : Photon.PunBehaviour
         gyroController = GetComponent<GyroController>();
     }
 
-
+    private void Update()
+    {
+        if (debugText != null)
+            debugText.text = PhotonNetwork.connectionStateDetailed.ToString();
+    }
     public override void OnJoinedLobby()
     {
-        if(debugText!=null)
-            debugText.text = "Joined lobby";
-        if (PhotonNetwork.countOfRooms > 0)
-        {
-            PhotonNetwork.JoinRoom(roomName);
-        }
-        else
-        {
-            PhotonNetwork.CreateRoom(roomName);
-        }
+       
+
+        PhotonNetwork.JoinRoom(roomName);
+        
 
         base.OnJoinedLobby();
     }
