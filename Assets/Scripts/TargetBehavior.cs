@@ -111,6 +111,18 @@ public class TargetBehavior : MonoBehaviour, ITrackableEventHandler
         }
     }
 
+    public Vector3 GetPhoneRight()
+    {
+        if (tracked)
+        {
+            return -ARCamera.transform.right;
+        }
+        else
+        {
+            return CameraProxy.transform.right;
+        }
+    }
+
 
     public Vector3 GetPhoneForward()
     {

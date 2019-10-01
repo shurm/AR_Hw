@@ -14,10 +14,9 @@ public class MobileShooter : MonoBehaviour {
     float mousedowned_time;
 
     bool bMouseDown = false;
-    float ballSpeedFixed = 40;
+    Vector3 displacementFromCamera = new Vector3(0, -3, 5);
 
-    public Transform ballSpawnPosition;
-
+   
     private void Start()
     {
         targetBehavior = FindObjectOfType<TargetBehavior>();
@@ -63,8 +62,9 @@ public class MobileShooter : MonoBehaviour {
             Vector3 delta = (mouseup_pos - mousedown_pos) / Screen.height;
             Vector3 swipe_vel = delta / mousedowned_time;
 
+
             if (swipe_vel.y > swipespeed_min) {
-                ShootBallUp();
+                ShootBallUp(swipe_vel);
             }
 
             bMouseDown = false;
@@ -87,7 +87,7 @@ public class MobileShooter : MonoBehaviour {
         //   the ownership of the ball to PC so the ball is correctly destroyed
         //   upon hitting a wall.
 
-        GameObject newPaintBall = PhotonNetwork.Instantiate("ball", ballSpawnPosition.position, Quaternion.identity, 0);
+        GameObject newPaintBall = PhotonNetwork.Instantiate("ball", targetBehavior.GetPhonePosition() + targetBehavior.GetPhoneUp()*displacementFromCamera.y+ targetBehavior.GetPhoneForward() * displacementFromCamera.z, Quaternion.identity, 0);
         PhotonView photonView = newPaintBall.GetComponent<PhotonView>();
         photonView.RPC("RPCInitialize", PhotonTargets.All, velocity, color_v);
     }
@@ -95,16 +95,16 @@ public class MobileShooter : MonoBehaviour {
     public void ShootBallFront()
     {
         float angle = 5;
-
+        float ballSpeedFixed = 40;
         angle = angle * Mathf.PI / 180;
         ShootBall(Mathf.Cos(angle) * ballSpeedFixed * targetBehavior.GetPhoneForward() + Mathf.Sin(angle) * ballSpeedFixed * targetBehavior.GetPhoneUp());
     }
 
-    public void ShootBallUp() {
-        //Debug.Log(targetBehavior.GetPhoneUp());
-        float angle = 60;
+    public void ShootBallUp(Vector3 swipe_vel) {
 
-        angle = angle * Mathf.PI / 180;
-        ShootBall(Mathf.Cos(angle) * ballSpeedFixed * targetBehavior.GetPhoneForward() + Mathf.Sin(angle) * ballSpeedFixed * targetBehavior.GetPhoneUp());
+        float ballSpeedFixed = 5;
+        
+       
+        ShootBall(swipe_vel.x * ballSpeedFixed * targetBehavior.GetPhoneRight() + targetBehavior.GetPhoneUp() * swipe_vel.y * ballSpeedFixed);
     }
 }

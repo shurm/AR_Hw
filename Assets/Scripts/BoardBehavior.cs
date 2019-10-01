@@ -9,8 +9,10 @@ public class BoardBehavior : Photon.MonoBehaviour {
 
     private List<GameObject> splatters = new List<GameObject>();
 
-    private float z_decrement = 0.00001f;
+    //fix the z issue so splatters appear in order
+    private float z_decrement = 0.001f;
     private float currrent_z_decrement = 0;
+
     private void Update () {
 	    if (Input.GetKeyDown(KeyCode.Space)) {
             imageTarget.SetActive(!imageTarget.activeSelf);
